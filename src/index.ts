@@ -143,11 +143,33 @@ const generate = async () => {
   }
 };
 
+const customHelp = `
+  ${chalk.bold('Uso:')}
+    $ react-cli [comando] [opciones]
+
+  ${chalk.bold('Comandos:')}
+    generate, g   Genera un nuevo elemento React
+    help          Muestra esta ayuda
+    version       Muestra la versión
+
+  ${chalk.bold('Opciones:')}
+    -h, --help     Muestra la ayuda
+    -v, --version  Muestra la versión
+
+  ${chalk.bold('Ejemplos:')}
+    $ react-cli generate
+    $ react-cli g
+
+  ${chalk.yellow('Desarrollado con ❤️ por PuertoChenta')}
+  ${chalk.dim('https://github.com/viroruga/react-cli-generator')}
+`;
+
 // Configuración del CLI
 program
   .name('react-cli')
   .description('CLI para generar componentes React, hooks, contextos y layouts')
-  .version('1.0.0');
+  .version('1.0.0')
+  .addHelpText('after', customHelp);
 
 program
   .command('generate')
