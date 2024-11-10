@@ -1,5 +1,5 @@
 {
-  "name": "react-cli-generator",
+  "name": "@puertochenta/react-cli-generator",
   "version": "1.0.0",
   "description": "CLI para generar componentes, hooks, páginas y más para React con TypeScript",
   "main": "dist/index.js",
@@ -95,6 +95,9 @@
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "warn"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",

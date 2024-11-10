@@ -26,9 +26,15 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# VS Code
+.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+
 # Editor directories and files
 .idea/
-.vscode/
 *.swp
 *.swo
 .DS_Store

@@ -25,13 +25,13 @@ npm >= 6.0.0
 ### Global (recomendado)
 
 ```bash
-npm install -g react-cli-generator
+npm install -g @puertochenta/react-cli-generator
 ```
 
 ### Local
 
 ```bash
-npm install --save-dev react-cli-generator
+npm install --save-dev @puertochenta/react-cli-generator
 ```
 
 ## 💻 Uso
@@ -47,6 +47,7 @@ react-cli g
 ### Tipos de Generadores
 
 1. **Componentes**
+
 ```bash
 # El CLI te guiará a través de las opciones
 react-cli g
@@ -61,6 +62,7 @@ react-cli g
 ```
 
 2. **Hooks**
+
 ```bash
 # Tipos disponibles:
 - Hook de Estado
@@ -71,6 +73,7 @@ react-cli g
 ```
 
 3. **Layouts**
+
 ```bash
 # Tipos disponibles:
 - Layout por Defecto
@@ -80,6 +83,7 @@ react-cli g
 ```
 
 4. **Páginas**
+
 ```bash
 # Tipos disponibles:
 - Página Básica
@@ -150,6 +154,7 @@ Puedes personalizar los templates creando un archivo `.react-cli-rc.json` en la 
 ## 🧪 Testing
 
 Los tests se generan automáticamente usando:
+
 - Jest
 - React Testing Library
 - User Event
