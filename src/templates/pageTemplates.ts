@@ -1,22 +1,31 @@
+export type PageTemplateType = 'basic' | 'detail' | 'list' | 'dashboard';
+
 interface PageOptions {
-    withLayout?: boolean;
-    withData?: boolean;
-    withRouter?: boolean;
-  }
-  
-  export const pageTemplates = {
-    basic: (name: string, options: PageOptions) => `import React from 'react';
+  withLayout?: boolean;
+  withData?: boolean;
+  withRouter?: boolean;
+}
+
+export const pageTemplates: Record<
+  PageTemplateType,
+  (name: string, options: PageOptions) => string
+> = {
+  basic: (name: string, options: PageOptions) => `import React from 'react';
   ${options.withLayout ? `import MainLayout from '../layouts/MainLayout';` : ''}
   ${options.withData ? `import { use${name}Data } from './${name}.data';` : ''}
-  
+
   const ${name}Page: React.FC = () => {
-    ${options.withData ? `
+    ${
+      options.withData
+        ? `
     const { data, loading, error } = use${name}Data();
-  
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
-    ` : ''}
-  
+    `
+        : ''
+    }
+
     return (
       ${options.withLayout ? `<MainLayout>` : ''}
       <div className="${name.toLowerCase()}-page">
@@ -28,24 +37,28 @@ interface PageOptions {
       ${options.withLayout ? `</MainLayout>` : ''}
     );
   };
-  
+
   export default ${name}Page;`,
-  
-    detail: (name: string, options: PageOptions) => `import React from 'react';
+
+  detail: (name: string, options: PageOptions) => `import React from 'react';
   ${options.withRouter ? `import { useParams } from 'react-router-dom';` : ''}
   ${options.withLayout ? `import MainLayout from '../layouts/MainLayout';` : ''}
   ${options.withData ? `import { use${name}Data } from './${name}.data';` : ''}
-  
+
   const ${name}DetailPage: React.FC = () => {
     ${options.withRouter ? `const { id } = useParams();` : ''}
-    ${options.withData ? `
+    ${
+      options.withData
+        ? `
     const { data, loading, error } = use${name}Data(${options.withRouter ? 'id' : ''});
-  
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
     if (!data) return <div>No data found</div>;
-    ` : ''}
-  
+    `
+        : ''
+    }
+
     return (
       ${options.withLayout ? `<MainLayout>` : ''}
       <div className="${name.toLowerCase()}-detail-page">
@@ -56,7 +69,7 @@ interface PageOptions {
             <button className="delete-button">Delete</button>
           </div>
         </div>
-  
+
         <div className="detail-content">
           {/* Detalles del item */}
           <div className="detail-section">
@@ -72,9 +85,9 @@ interface PageOptions {
       ${options.withLayout ? `</MainLayout>` : ''}
     );
   };
-  
+
   export default ${name}DetailPage;`,
-  
+
   list: (name: string, options: PageOptions) => `import React, { useState } from 'react';
 ${options.withRouter ? `import { useNavigate } from 'react-router-dom';` : ''}
 ${options.withLayout ? `import MainLayout from '../layouts/MainLayout';` : ''}
@@ -86,14 +99,16 @@ const ${name}ListPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  ${options.withData ? `
+  ${
+    options.withData
+      ? `
   const { data, loading, error } = use${name}Data();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  const filteredData = data?.filter(item => 
-    Object.values(item).some(value => 
+  const filteredData = data?.filter(item =>
+    Object.values(item).some(value =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   ) || [];
@@ -103,14 +118,16 @@ const ${name}ListPage: React.FC = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  ` : ''}
+  `
+      : ''
+  }
 
   return (
     ${options.withLayout ? `<MainLayout>` : ''}
     <div className="${name.toLowerCase()}-list-page">
       <div className="page-header">
         <h1>${name} List</h1>
-        <button 
+        <button
           className="create-button"
           ${options.withRouter ? `onClick={() => navigate('/${name.toLowerCase()}/create')}` : ''}
         >
@@ -129,7 +146,9 @@ const ${name}ListPage: React.FC = () => {
       </div>
 
       <div className="list-content">
-        ${options.withData ? `
+        ${
+          options.withData
+            ? `
           {paginatedData.length > 0 ? (
             <>
               <table className="data-table">
@@ -142,9 +161,13 @@ const ${name}ListPage: React.FC = () => {
                 </thead>
                 <tbody>
                   {paginatedData.map((item, index) => (
-                    <tr 
+                    <tr
                       key={index}
-                      ${options.withRouter ? `onClick={() => navigate(\`/${name.toLowerCase()}/\${item.id}\`)}` : ''}
+                      ${
+                        options.withRouter
+                          ? `onClick={() => navigate(\`/${name.toLowerCase()}/\${item.id}\`)}`
+                          : ''
+                      }
                     >
                       <td>{item.id}</td>
                       <td>{item.name}</td>
@@ -178,7 +201,9 @@ const ${name}ListPage: React.FC = () => {
           ) : (
             <div className="no-results">No items found</div>
           )}
-        ` : '/* Aquí va el contenido de la lista */'}
+        `
+            : '/* Aquí va el contenido de la lista */'
+        }
       </div>
     </div>
     ${options.withLayout ? `</MainLayout>` : ''}
@@ -186,19 +211,23 @@ const ${name}ListPage: React.FC = () => {
 };
 
 export default ${name}ListPage;`,
- 
-    dashboard: (name: string, options: PageOptions) => `import React from 'react';
+
+  dashboard: (name: string, options: PageOptions) => `import React from 'react';
   ${options.withLayout ? `import DashboardLayout from '../layouts/DashboardLayout';` : ''}
   ${options.withData ? `import { use${name}Data } from './${name}.data';` : ''}
-  
+
   const ${name}DashboardPage: React.FC = () => {
-    ${options.withData ? `
+    ${
+      options.withData
+        ? `
     const { data, loading, error } = use${name}Data();
-  
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
-    ` : ''}
-  
+    `
+        : ''
+    }
+
     return (
       ${options.withLayout ? `<DashboardLayout>` : ''}
       <div className="${name.toLowerCase()}-dashboard">
@@ -208,7 +237,7 @@ export default ${name}ListPage;`,
             {/* Selector de fechas */}
           </div>
         </div>
-  
+
         <div className="dashboard-grid">
           {/* Tarjetas de resumen */}
           <div className="summary-card">
@@ -224,7 +253,7 @@ export default ${name}ListPage;`,
             <div className="card-value">$12,345</div>
           </div>
         </div>
-  
+
         <div className="dashboard-charts">
           {/* Gráficos */}
           <div className="chart-container">
@@ -236,7 +265,7 @@ export default ${name}ListPage;`,
             {/* Gráfico de distribución */}
           </div>
         </div>
-  
+
         <div className="recent-activity">
           <h2>Recent Activity</h2>
           <div className="activity-list">
@@ -247,6 +276,6 @@ export default ${name}ListPage;`,
       ${options.withLayout ? `</DashboardLayout>` : ''}
     );
   };
-  
-  export default ${name}DashboardPage;`
-  };
+
+  export default ${name}DashboardPage;`,
+};

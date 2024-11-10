@@ -1,0 +1,32 @@
+{
+  // Configuración de Prettier para formateo automático al guardar
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+
+  // Configuraciones de Prettier
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "prettier.trailingComma": "es5",
+  "prettier.bracketSpacing": true,
+  "prettier.arrowParens": "always",
+  "prettier.bracketSameLine": true, // Reemplaza jsxBracketSameLine (afecta a JSX y HTML)
+
+  // Otras configuraciones útiles de VSCode
+  "files.eol": "\n", // Asegura el uso de saltos de línea estilo Unix
+  "files.insertFinalNewline": true, // Añade una nueva línea al final del archivo
+  "files.trimTrailingWhitespace": true, // Elimina espacios en blanco al final de cada línea
+
+  // Configuración de vista y experiencia de usuario
+  "editor.minimap.enabled": true, // Habilita el minimapa para una visión rápida del código
+  "editor.wordWrap": "on", // Habilita el ajuste de líneas largas
+  "editor.tabSize": 2, // Tamaño de tabulación en el editor
+  "workbench.colorTheme": "Dracula Theme", // Tema de color preferido, puedes cambiarlo a tu gusto
+
+  // Configuración de emmet para JSX y archivos de React
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  }
+}

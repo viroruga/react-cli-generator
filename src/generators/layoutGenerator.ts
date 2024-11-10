@@ -1,25 +1,30 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import { writeFile } from '../utils/fileUtils';
-import { layoutTemplates } from '../templates/layoutTemplates';
+import { layoutTemplates, LayoutTemplateType } from '../templates/layoutTemplates';
 import { getStyleTemplate } from '../templates/styleTemplates';
 
 export interface LayoutGeneratorOptions {
   name: string;
-  subType: string;
+  subType: LayoutTemplateType;
   style?: 'css' | 'scss' | 'styled-components' | 'none';
   withNav?: boolean;
   withFooter?: boolean;
+  withSidebar?: boolean;
   path?: string;
 }
 
-export const generateLayout = async (name: string, subType: string): Promise<void> => {
+export const generateLayout = async (name: string, subType: LayoutTemplateType): Promise<void> => {
   const options = await promptLayoutOptions(name, subType);
   const baseDir = path.join(process.cwd(), 'src', options.path || '');
 
   // Generar layout principal
   writeFile({
-    content: layoutTemplates[options.subType](name, options),
+    content: layoutTemplates[options.subType](name, {
+      withNav: options.withNav,
+      withFooter: options.withFooter,
+      withSidebar: options.withSidebar
+    }),
     filePath: baseDir,
     fileName: name,
     extension: 'tsx'
@@ -58,9 +63,9 @@ export const generateLayout = async (name: string, subType: string): Promise<voi
 
 const promptLayoutOptions = async (
   name: string,
-  subType: string
+  subType: LayoutTemplateType
 ): Promise<LayoutGeneratorOptions> => {
-  const { style, withNav, withFooter, path } = await inquirer.prompt([
+  const { style, withNav, withFooter, withSidebar, path } = await inquirer.prompt([
     {
       type: 'list',
       name: 'style',
@@ -85,6 +90,12 @@ const promptLayoutOptions = async (
       default: true
     },
     {
+      type: 'confirm',
+      name: 'withSidebar',
+      message: '¿Quieres incluir una barra lateral?',
+      default: subType === 'dashboard'
+    },
+    {
       type: 'input',
       name: 'path',
       message: '¿En qué directorio quieres crearlo? (relativo a src)',
@@ -92,19 +103,18 @@ const promptLayoutOptions = async (
     }
   ]);
 
-  return { name, subType, style, withNav, withFooter, path };
+  return { name, subType, style, withNav, withFooter, withSidebar, path };
 };
 
-const generateNavComponent = (layoutName: string): string => {
-  return `import React from 'react';
+const generateNavComponent = (layoutName: string): string => `import React from 'react';
 
 interface ${layoutName}NavProps {
-  // Define las props aquí
+  className?: string;
 }
 
-const ${layoutName}Nav: React.FC<${layoutName}NavProps> = () => {
+const ${layoutName}Nav: React.FC<${layoutName}NavProps> = ({ className = '' }) => {
   return (
-    <nav className="${layoutName.toLowerCase()}-nav">
+    <nav className={\`${layoutName.toLowerCase()}-nav \${className}\`}>
       {/* Agrega tus elementos de navegación aquí */}
     </nav>
   );
@@ -112,18 +122,16 @@ const ${layoutName}Nav: React.FC<${layoutName}NavProps> = () => {
 
 export default ${layoutName}Nav;
 `;
-};
 
-const generateFooterComponent = (layoutName: string): string => {
-  return `import React from 'react';
+const generateFooterComponent = (layoutName: string): string => `import React from 'react';
 
 interface ${layoutName}FooterProps {
-  // Define las props aquí
+  className?: string;
 }
 
-const ${layoutName}Footer: React.FC<${layoutName}FooterProps> = () => {
+const ${layoutName}Footer: React.FC<${layoutName}FooterProps> = ({ className = '' }) => {
   return (
-    <footer className="${layoutName.toLowerCase()}-footer">
+    <footer className={\`${layoutName.toLowerCase()}-footer \${className}\`}>
       {/* Agrega tus elementos de footer aquí */}
     </footer>
   );
@@ -131,4 +139,3 @@ const ${layoutName}Footer: React.FC<${layoutName}FooterProps> = () => {
 
 export default ${layoutName}Footer;
 `;
-};

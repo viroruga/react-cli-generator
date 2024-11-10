@@ -1,11 +1,14 @@
+export type LayoutTemplateType = 'default' | 'dashboard' | 'auth' | 'landing';
+
 interface LayoutOptions {
-    withNav?: boolean;
-    withFooter?: boolean;
-    withSidebar?: boolean;
-  }
+   withNav?: boolean;
+   withFooter?: boolean;
+   withSidebar?: boolean;
+}
   
-  export const layoutTemplates = {
-    default: (name: string, options: LayoutOptions) => `import React, { ReactNode } from 'react';
+export const layoutTemplates: Record<LayoutTemplateType, (name: string, options: LayoutOptions) => string> = {
+    
+  default: (name: string, options: LayoutOptions) => `import React, { ReactNode } from 'react';
   ${options.withNav ? `import ${name}Nav from './${name}Nav';` : ''}
   ${options.withFooter ? `import ${name}Footer from './${name}Footer';` : ''}
   

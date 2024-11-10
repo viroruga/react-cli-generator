@@ -3,10 +3,11 @@ import path from 'path';
 import { writeFile } from '../utils/fileUtils';
 import { pageTemplates } from '../templates/pageTemplates';
 import { getStyleTemplate } from '../templates/styleTemplates';
+import { PageTemplateType } from '../templates/pageTemplates';
 
 export interface PageGeneratorOptions {
   name: string;
-  subType: string;
+  subType: PageTemplateType;
   style?: 'css' | 'scss' | 'styled-components' | 'none';
   withLayout?: boolean;
   withData?: boolean;
@@ -14,7 +15,7 @@ export interface PageGeneratorOptions {
   path?: string;
 }
 
-export const generatePage = async (name: string, subType: string): Promise<void> => {
+export const generatePage = async (name: string, subType: PageTemplateType): Promise<void> => {
   const options = await promptPageOptions(name, subType);
   const baseDir = path.join(process.cwd(), 'src', options.path || '');
 
@@ -23,7 +24,7 @@ export const generatePage = async (name: string, subType: string): Promise<void>
     content: pageTemplates[options.subType](name, options),
     filePath: baseDir,
     fileName: name,
-    extension: 'tsx'
+    extension: 'tsx',
   });
 
   // Generar estilos si se seleccionaron
@@ -33,7 +34,7 @@ export const generatePage = async (name: string, subType: string): Promise<void>
       content: getStyleTemplate(name, options.style),
       filePath: baseDir,
       fileName: `${name}.styles`,
-      extension: styleExt
+      extension: styleExt,
     });
   }
 
@@ -43,7 +44,7 @@ export const generatePage = async (name: string, subType: string): Promise<void>
       content: generateDataLayer(name),
       filePath: baseDir,
       fileName: `${name}.data`,
-      extension: 'ts'
+      extension: 'ts',
     });
   }
 
@@ -52,14 +53,14 @@ export const generatePage = async (name: string, subType: string): Promise<void>
       content: generateRouteConfig(name),
       filePath: baseDir,
       fileName: `${name}.routes`,
-      extension: 'ts'
+      extension: 'ts',
     });
   }
 };
 
 const promptPageOptions = async (
   name: string,
-  subType: string
+  subType: PageTemplateType
 ): Promise<PageGeneratorOptions> => {
   const { style, withLayout, withData, withRouter, path } = await inquirer.prompt([
     {
@@ -70,33 +71,33 @@ const promptPageOptions = async (
         { name: 'CSS', value: 'css' },
         { name: 'SCSS', value: 'scss' },
         { name: 'Styled Components', value: 'styled-components' },
-        { name: 'Ninguno', value: 'none' }
-      ]
+        { name: 'Ninguno', value: 'none' },
+      ],
     },
     {
       type: 'confirm',
       name: 'withLayout',
       message: '¿Quieres usar un layout específico?',
-      default: true
+      default: true,
     },
     {
       type: 'confirm',
       name: 'withData',
       message: '¿Quieres generar una capa de datos?',
-      default: false
+      default: false,
     },
     {
       type: 'confirm',
       name: 'withRouter',
       message: '¿Quieres generar configuración de rutas?',
-      default: false
+      default: false,
     },
     {
       type: 'input',
       name: 'path',
       message: '¿En qué directorio quieres crearlo? (relativo a src)',
-      default: `pages/${subType}s`
-    }
+      default: `pages/${subType}s`,
+    },
   ]);
 
   return { name, subType, style, withLayout, withData, withRouter, path };

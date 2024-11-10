@@ -1,19 +1,19 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import { writeFile } from '../utils/fileUtils';
-import { componentTemplates } from '../templates/componentTemplates';
+import { componentTemplates, ComponentTemplateType } from '../templates/componentTemplates';
 import { getStyleTemplate } from '../templates/styleTemplates';
 import { getTestTemplate } from '../templates/testTemplates';
 
 export interface ComponentGeneratorOptions {
   name: string;
-  subType: string;
+  subType: ComponentTemplateType;
   style?: 'css' | 'scss' | 'styled-components' | 'none';
   withTest?: boolean;
   path?: string;
 }
 
-export const generateComponent = async (name: string, subType: string): Promise<void> => {
+export const generateComponent = async (name: string, subType: ComponentTemplateType): Promise<void> => {
   const options = await promptComponentOptions(name, subType);
   const baseDir = path.join(process.cwd(), 'src', options.path || '');
 
@@ -39,7 +39,7 @@ export const generateComponent = async (name: string, subType: string): Promise<
   // Generar tests si se seleccionaron
   if (options.withTest) {
     writeFile({
-      content: getTestTemplate(name),
+      content: getTestTemplate(name, 'component'),
       filePath: baseDir,
       fileName: `${name}.test`,
       extension: 'tsx'
@@ -49,7 +49,7 @@ export const generateComponent = async (name: string, subType: string): Promise<
 
 const promptComponentOptions = async (
   name: string,
-  subType: string
+  subType: ComponentTemplateType
 ): Promise<ComponentGeneratorOptions> => {
   const { style, withTest, path } = await inquirer.prompt([
     {

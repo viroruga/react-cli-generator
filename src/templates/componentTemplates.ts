@@ -1,4 +1,7 @@
-export const componentTemplates = {
+export type ComponentTemplateType = 'basic' | 'card' | 'modal' | 'table' | 'list' | 'navbar';
+
+export const componentTemplates: Record<ComponentTemplateType, (name: string) => string> = {
+  
     basic: (name: string) => `import React from 'react';
   
   interface ${name}Props {
