@@ -69,12 +69,6 @@ const generatorTypes: GeneratorOption[] = [
   },
 ];
 
-interface GenerateOptions {
-  path?: string;
-  style?: 'css' | 'scss' | 'styled-components' | 'none';
-  withTest?: boolean;
-}
-
 const generate = async () => {
   try {
     // Primera pregunta: Tipo de generador
@@ -174,7 +168,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
   console.error(chalk.red('Promesa no controlada:'), reason);
   process.exit(1);
 });
