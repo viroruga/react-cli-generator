@@ -7,15 +7,15 @@
     "react-cli": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "npx ts-node src/index.ts",
     "test": "jest",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "clean": "rimraf dist",
     "prepare": "npm run clean && npm run build",
-    "watch": "tsc -w"
+    "watch": "npx tsc -w"
   },
   "keywords": [
     "react",
